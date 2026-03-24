@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>居然之家自营家装报价系统 - 实时报价 + 客户联系</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e9f0fc 0%, #d9e4f5 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quote-container {
+            max-width: 860px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 48px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb4d);
+            background-size: 180% 180%;
+            padding: 2rem 2rem 1.8rem;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .hero h1 span {
+            background: rgba(255,255,255,0.2);
+            padding: 0 12px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .hero p {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .form-panel {
+            padding: 2rem 2rem 1.8rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.8rem;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        label i {
+            font-style: normal;
+            font-weight: 500;
+            background: #eef2ff;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: #1e3a8a;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 28px;
+            background-color: white;
+            transition: all 0.2s;
+            outline: none;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        input:focus, select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        .area-hint {
+            font-size: 0.75rem;
+            color: #5b6e8c;
+            margin-top: 6px;
+            margin-left: 12px;
+        }
+
+        .row-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .extra-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .checkbox-group {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 12px 16px;
+            border: 1px solid #e2edff;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            cursor: pointer;
+            padding: 6px 0;
+        }
+
+        .checkbox-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .checkbox-item input {
+            width: 20px;
+            height: 20px;
+            accent-color: #3b82f6;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .checkbox-item label {
+            margin-bottom: 0;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: #1e293b;
+            flex: 1;
+        }
+
+        .price-tag {
+            background: #eef2ff;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .quote-result {
+            background: linear-gradient(120deg, #fef9e6 0%, #fff7ed 100%);
+            border-radius: 36px;
+            padding: 1.5rem;
+            margin: 1rem 0 0.8rem;
+            border: 1px solid #ffe2b5;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.03);
+        }
+
+        .total-price {
+            text-align: center;
+            border-bottom: 2px dashed #ffd89a;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .total-price .label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #9b6e3e;
+            letter-spacing: 1px;
+        }
+
+        .total-price .amount {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: #b45309;
+            line-height: 1.2;
+            margin-top: 8px;
+            word-break: break-word;
+        }
+
+        .total-price .amount small {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .detail-breakdown {
+            background: white;
+            border-radius: 28px;
+            padding: 1rem 1.2rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0e4cf;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row.total {
+            font-weight: 800;
+            color: #b45309;
+            font-size: 1rem;
+            margin-top: 6px;
+            padding-top: 10px;
+            border-top: 2px solid #ffd89a;
+            border-bottom: none;
+        }
+
+        .error-msg {
+            color: #dc2626;
+            font-size: 0.85rem;
+            background: #fee2e2;
+            border-radius: 30px;
+            padding: 8px 16px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        /* 客户联系表单样式 */
+        .contact-section {
+            background: #f9fafb;
+            border-radius: 28px;
+            padding: 1.5rem;
+            margin-top: 1.8rem;
+            transition: all 0.2s;
+        }
+
+        .contact-section h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-section .sub {
+            font-size: 0.75rem;
+            color: #6c7a91;
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .contact-section input {
+            padding: 12px 16px;
+            border-radius: 40px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .contact-section button {
+            background: #b45309;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+
+        .contact-section button:hover {
+            background: #9b3e06;
+        }
+
+        .privacy-note {
+            font-size: 0.7rem;
+            color: #8b9eb0;
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        .toggle-form-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.2s;
+        }
+
+        .toggle-form-btn:hover {
+            background: #2563eb;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #6c7a91;
+            padding: 1rem 2rem 1.5rem;
+            border-top: 1px solid #eef2ff;
+            background: #fefefe;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+            .form-panel {
+                padding: 1.5rem;
+            }
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            .total-price .amount {
+                font-size: 2.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quote-container">
+    <div class="hero">
+        <h1>
+            📐 居然之家自营家装自动报价系统
+            <span>AI极速版</span>
+        </h1>
+        <p>输入面积 · 挑选要求 · 实时获取精准报价</p>
+    </div>
+
+    <div class="form-panel">
+        <!-- 面积输入 -->
+        <div class="input-group">
+            <label>📏 装修面积 <i>m²</i></label>
+            <input type="number" id="areaInput" value="85" step="any" min="1" placeholder="例如 85 平方米">
+            <div class="area-hint">✨ 支持小数，例如 73.5 ㎡ （1㎡起算）</div>
+        </div>
+
+        <!-- 双栏：房屋类型 + 装修档次 -->
+        <div class="row-options">
+            <div class="col">
+                <label>🏠 房屋类型</label>
+                <select id="houseType">
+                    <option value="750">平层</option>
+                    <option value="1200">别墅 / 跃层</option>
+                    <option value="1000">办公室 / 商业空间</option>
+                </select>
+            </div>
+            <div class="col">
+                <label>✨ 装修档次</label>
+                <select id="decorationLevel">
+                    <option value="1">简约舒适（经济实用）</option>
+                    <option value="1.33">精装轻奢（品质升级）</option>
+                    <option value="1.8">豪华定制（高端臻享）</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 额外要求 (多选 附加费用) -->
+        <div class="extra-title">
+            ⚙️ 增值服务 & 个性要求 <span style="font-size:0.7rem;">(可多选，叠加费用)</span>
+        </div>
+        <div class="checkbox-group">
+            <div class="checkbox-item">
+                <input type="checkbox" id="smartHome" data-price="7500">
+                <label for="smartHome">🏡 10投影定制家具</label>
+                <span class="price-tag">+¥7,500</span>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="ecoMaterial" data-price="15000">
+                <label for="ecoMaterial">🌿老房拆砸+水电全改</label>
+                <span class="price-tag">+¥15,000</span>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="customDesign" data-price="13500">
+                <label for="customDesign">🎨 13件套成品家具</label>
+                <span class="price-tag">+¥13,500</span>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="fastTrack" data-price="10800">
+                <label for="fastTrack">⚡两个卫生间</label>
+                <span class="price-tag">+¥1,0800</span>
+            </div>
+        </div>
+
+        <!-- 报价展示区域 -->
+        <div class="quote-result" id="quoteResult">
+            <div class="total-price">
+                <div class="label">💰 预估总报价 (RMB)</div>
+                <div class="amount" id="totalAmount">¥ 0</div>
+            </div>
+            <div class="detail-breakdown" id="detailBreakdown">
+                <div class="detail-row">等待输入有效面积...</div>
+            </div>
+            <div id="errorMsg" style="display: none;" class="error-msg"></div>
+        </div>
+
+        <!-- 客户联系表单（可折叠，提升转化） -->
+        <button class="toggle-form-btn" id="showFormBtn">📩 获取正式报价方案 →</button>
+        <div id="contactFormContainer" style="display: none;">
+            https://wj.qq.com/s2/26093449/9a1a/
+
+
+<script>
+    (function() {
+        // DOM 元素
+        const areaInput = document.getElementById('areaInput');
+        const houseTypeSelect = document.getElementById('houseType');
+        const levelSelect = document.getElementById('decorationLevel');
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][data-price]');
+        const totalAmountSpan = document.getElementById('totalAmount');
+        const detailBreakdownDiv = document.getElementById('detailBreakdown');
+        const errorMsgDiv = document.getElementById('errorMsg');
+        
+        // 表单相关元素
+        const showFormBtn = document.getElementById('showFormBtn');
+        const contactFormContainer = document.getElementById('contactFormContainer');
+        const hiddenQuote = document.getElementById('hiddenQuote');
+        const hiddenArea = document.getElementById('hiddenArea');
+        const hiddenHouseType = document.getElementById('hiddenHouseType');
+        const hiddenLevel = document.getElementById('hiddenLevel');
+        const hiddenExtras = document.getElementById('hiddenExtras');
+        
+        // 当前报价数据（用于实时更新隐藏字段）
+        let currentQuoteData = {
+            total: 0,
+            area: 0,
+            houseTypeText: '',
+            levelText: '',
+            extrasText: ''
+        };
+        
+        // 辅助函数：格式化金额为千分位，不带符号用于存储，但显示用formatMoney
+        function formatMoney(value) {
+            if (isNaN(value)) return '¥ 0';
+            const rounded = Math.round(value);
+            return '¥ ' + rounded.toLocaleString('zh-CN');
+        }
+        
+        // 获取额外要求总金额和文本描述
+        function getExtraDetails() {
+            let extraSum = 0;
+            let extraNames = [];
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    const price = parseFloat(cb.getAttribute('data-price'));
+                    if (!isNaN(price)) extraSum += price;
+                    // 获取对应的label文本
+                    const labelEl = document.querySelector(`label[for="${cb.id}"]`);
+                    if (labelEl) extraNames.push(labelEl.innerText.trim());
+                }
+            });
+            return { sum: extraSum, names: extraNames };
+        }
+        
+        // 获取有效面积
+        function getValidArea() {
+            let rawValue = areaInput.value.trim();
+            if (rawValue === '') return null;
+            let area = parseFloat(rawValue);
+            if (isNaN(area) || area <= 0) return null;
+            if (area > 10000) return null;
+            return area;
+        }
+        
+        // 更新隐藏字段（表单中的报价信息）
+        function updateHiddenFields(area, houseText, levelText, total, extrasText) {
+            if (hiddenQuote) hiddenQuote.value = Math.round(total);
+            if (hiddenArea) hiddenArea.value = area ? area.toFixed(2) : '';
+            if (hiddenHouseType) hiddenHouseType.value = houseText;
+            if (hiddenLevel) hiddenLevel.value = levelText;
+            if (hiddenExtras) hiddenExtras.value = extrasText;
+        }
+        
+        // 核心报价计算 & UI更新
+        function updateQuote() {
+            const area = getValidArea();
+            const areaValid = (area !== null && area > 0);
+            
+            errorMsgDiv.style.display = 'none';
+            errorMsgDiv.innerHTML = '';
+            
+            if (!areaValid) {
+                totalAmountSpan.innerText = '¥ 0';
+                detailBreakdownDiv.innerHTML = `
+                    <div class="detail-row" style="color:#b91c1c;">⚠️ 请输入有效的面积（大于0的数字）</div>
+                    <div class="detail-row">请检查面积输入框，确保数值正确</div>
+                `;
+                // 清空隐藏字段
+                updateHiddenFields(null, '', '', 0, '');
+                return;
+            }
+            
+            if (area > 5000) {
+                errorMsgDiv.style.display = 'block';
+                errorMsgDiv.innerHTML = '📢 提示：面积较大，报价仅供参考，请联系顾问获取更优方案。';
+            }
+            
+            let unitPrice = parseFloat(houseTypeSelect.value);
+            if (isNaN(unitPrice)) unitPrice = 1000;
+            let gradeFactor = parseFloat(levelSelect.value);
+            if (isNaN(gradeFactor)) gradeFactor = 1;
+            
+            const baseCost = area * unitPrice;
+            const gradeExtraCost = baseCost * (gradeFactor - 1);
+            const finalDecorationCost = baseCost * gradeFactor;
+            
+            const extra = getExtraDetails();
+            const extraTotal = extra.sum;
+            const totalQuote = finalDecorationCost + extraTotal;
+            
+            // 获取显示文本
+            const houseTypeText = houseTypeSelect.options[houseTypeSelect.selectedIndex]?.text || '普通公寓';
+            const levelText = levelSelect.options[levelSelect.selectedIndex]?.text || '简约舒适';
+            const extrasText = extra.names.length ? extra.names.join('、') : '无';
+            
+            // 更新全局数据
+            currentQuoteData = {
+                total: totalQuote,
+                area: area,
+                houseTypeText: houseTypeText,
+                levelText: levelText,
+                extrasText: extrasText
+            };
+            
+            // 更新隐藏字段（用于表单提交）
+            updateHiddenFields(area, houseTypeText, levelText, totalQuote, extrasText);
+            
+            totalAmountSpan.innerText = formatMoney(totalQuote);
+            
+            // 构建明细HTML
+            let detailHTML = `
+                <div class="detail-row">
+                    <span>🏠 ${houseTypeText} · 单价</span>
+                    <span>${formatMoney(unitPrice)}/㎡</span>
+                </div>
+                <div class="detail-row">
+                    <span>📐 施工面积</span>
+                    <span>${area.toFixed(2)} ㎡</span>
+                </div>
+                <div class="detail-row">
+                    <span>🔨 基础装修费 (面积×单价)</span>
+                    <span>${formatMoney(baseCost)}</span>
+                </div>
+                <div class="detail-row">
+                    <span>✨ 档次系数: ${levelText} (${gradeFactor}x)</span>
+                    <span style="color:#b45309;">+ ${formatMoney(gradeExtraCost)}</span>
+                </div>
+                <div class="detail-row" style="border-bottom: 1px solid #ffe0b5;">
+                    <span><strong>🏗️ 基础装修合计(含档次)</strong></span>
+                    <span><strong>${formatMoney(finalDecorationCost)}</strong></span>
+                </div>
+            `;
+            
+            if (extra.names.length > 0) {
+                detailHTML += `<div style="margin-top: 8px; font-weight: 600; color:#7c5e3a;">➕ 个性化增值服务</div>`;
+                extra.names.forEach((name, idx) => {
+                    // 这里为了简单，只显示名称和总价，具体单项价格可复用之前的逻辑，但为了明细清晰，我们可以显示各单项
+                    // 不过之前checkbox每个都有价格，可以在遍历时拿到对应价格，但上面没有保留单项价格列表，简单起见统一显示总加价
+                    // 更友好的做法是重新获取带价格的列表
+                });
+                // 重新获取带价格的列表用于明细
+                const extraItems = [];
+                checkboxes.forEach(cb => {
+                    if (cb.checked) {
+                        const labelEl = document.querySelector(`label[for="${cb.id}"]`);
+                        const name = labelEl ? labelEl.innerText.trim() : cb.id;
+                        const price = parseFloat(cb.getAttribute('data-price'));
+                        extraItems.push({ name, price });
+                    }
+                });
+                extraItems.forEach(item => {
+                    detailHTML += `
+                        <div class="detail-row">
+                            <span>${item.name}</span>
+                            <span>${formatMoney(item.price)}</span>
+                        </div>
+                    `;
+                });
+                detailHTML += `
+                    <div class="detail-row" style="border-bottom: 1px solid #ffe0b5;">
+                        <span>📌 额外要求合计</span>
+                        <span>${formatMoney(extraTotal)}</span>
+                    </div>
+                `;
+            } else {
+                detailHTML += `
+                    <div class="detail-row" style="color:#6c7a91;">
+                        <span>⚙️ 未选择增值服务</span>
+                        <span>¥ 0</span>
+                    </div>
+                `;
+            }
+            
+            detailHTML += `
+                <div class="detail-row total">
+                    <span>💰 系统自动报价总额</span>
+                    <span>${formatMoney(totalQuote)}</span>
+                </div>
+                <div class="detail-row" style="font-size:0.7rem; justify-content:center; gap:6px; color:#6b7280;">
+                    ⚡ 根据面积&实时配置生成，精确至元
+                </div>
+            `;
+            
+            detailBreakdownDiv.innerHTML = detailHTML;
+        }
+        
+        // 显示/隐藏表单
+        showFormBtn.addEventListener('click', function() {
+            if (contactFormContainer.style.display === 'none') {
+                contactFormContainer.style.display = 'block';
+                showFormBtn.textContent = '收起表单';
+                // 确保隐藏字段是最新的（以防用户在隐藏时修改了报价）
+                const area = getValidArea();
+                if (area) {
+                    const houseTypeText = houseTypeSelect.options[houseTypeSelect.selectedIndex]?.text || '';
+                    const levelText = levelSelect.options[levelSelect.selectedIndex]?.text || '';
+                    const extra = getExtraDetails();
+                    const total = currentQuoteData.total;
+                    updateHiddenFields(area, houseTypeText, levelText, total, extra.names.join('、'));
+                }
+            } else {
+                contactFormContainer.style.display = 'none';
+                showFormBtn.textContent = '📩 获取正式报价方案 →';
+            }
+        });
+        
+        // 绑定事件
+        function bindEvents() {
+            areaInput.addEventListener('input', updateQuote);
+            houseTypeSelect.addEventListener('change', updateQuote);
+            levelSelect.addEventListener('change', updateQuote);
+            checkboxes.forEach(cb => cb.addEventListener('change', updateQuote));
+            areaInput.addEventListener('blur', function() {
+                let val = areaInput.value.trim();
+                if (val !== '') {
+                    let num = parseFloat(val);
+                    if (!isNaN(num) && num > 0 && val.includes('.') && val.split('.')[1]?.length > 2) {
+                        areaInput.value = num.toFixed(2);
+                    }
+                }
+                updateQuote();
+            });
+        }
+        
+        // 初始化
+        function init() {
+            bindEvents();
+            // 确保所有checkbox未选中
+            checkboxes.forEach(cb => cb.checked = false);
+            houseTypeSelect.value = "750";
+            levelSelect.value = "1";
+            updateQuote();
+            // 表单容器默认隐藏
+            contactFormContainer.style.display = 'none';
+        }
+        
+        init();
+    })();
+</script>
+</body>
+</html>
